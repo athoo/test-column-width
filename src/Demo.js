@@ -38,9 +38,9 @@ class GridDemo extends React.Component {
                     style={style}
                     className="ReactVirtualized__Table__headerColumn"
                 >
-                    <div className="ReactVirtualized__Table__headerTruncatedText">
+                    <span className="ReactVirtualized__Table__headerTruncatedText">
                         {list[rowIndex][columnIndex]}
-                    </div>
+                    </span>
                     <Draggable
                         axis="x"
                         defaultClassName="DragHandle"
