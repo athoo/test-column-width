@@ -3,12 +3,20 @@ import { Column, Table, Grid } from "react-virtualized";
 import Draggable from "react-draggable";
 import faker from "faker";
 
-const TOTAL_WIDTH = 500;
+const TOTAL_WIDTH = 1200;
 const list = new Array(100).fill(true).map(() => ([
     faker.name.findName(),
     faker.name.jobTitle(),
     faker.address.city()
 ]));
+
+
+
+const list2 = new Array(100).fill(true).map(() => ({
+    "name":faker.name.findName(),
+    "description":faker.name.jobTitle(),
+    "location":faker.address.city()
+}));
 
 class GridDemo extends React.Component {
     constructor(props)
@@ -25,27 +33,33 @@ class GridDemo extends React.Component {
     cellRender ({columnIndex, key, rowIndex, style}) {
         return (
             <React.Fragment key={key}>
-            <div
-                key={key}
-                style={style}
-            >
-                {list[rowIndex][columnIndex]}
-            </div>
-                <Draggable
-                    axis="x"
-                    defaultClassName="DragHandle"
-                    defaultClassNameDragging="DragHandleActive"
-                    onDrag={(event, { deltaX }) =>
-                        this.resizeRow({
-                            key,
-                            deltaX
-                        })
-                    }
-                    position={{ x: 0 }}
-                    zIndex={999}
+                <div
+                    key={key}
+                    style={style}
+                    className="ReactVirtualized__Table__headerColumn"
                 >
-                    <span>⋮</span>
-                </Draggable>
+                    <div className="ReactVirtualized__Table__headerTruncatedText">
+                        {list[rowIndex][columnIndex]}
+                    </div>
+                    <Draggable
+                        axis="x"
+                        defaultClassName="DragHandle"
+                        defaultClassNameDragging="DragHandleActive"
+                        onDrag={(event, { deltaX }) =>
+                            this.resizeRow({
+                                key,
+                                deltaX
+                            })
+                        }
+                        position={{ x: 0 }}
+                        zIndex={999}
+                    >
+                        <span className="DragHandleIcon">⋮</span>
+                    </Draggable>
+
+                </div>
+
+
             </React.Fragment>
         )
     }
@@ -97,7 +111,6 @@ class Demo extends React.Component {
     };
 
 
-
     render() {
         const { list } = this.props;//the list is from the external reference.
         // const { widths } = this.state;
@@ -109,8 +122,8 @@ class Demo extends React.Component {
                 height={300}
                 headerHeight={20}
                 rowHeight={30}
-                rowCount={list.length}
-                rowGetter={({ index }) => list[index]}
+                rowCount={list2.length}
+                rowGetter={({ index }) => list2[index]}
             >
                 <Column
                     headerRenderer={this.headerRenderer}

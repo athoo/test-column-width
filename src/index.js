@@ -22,3 +22,4 @@ import {Demo, GridDemo} from "./Demo";
 
 
 ReactDOM.render(<GridDemo />, document.getElementById("root"));
+ReactDOM.render(<Demo />, document.getElementById("example"));
