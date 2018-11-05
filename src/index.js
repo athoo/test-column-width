@@ -15,11 +15,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "react-virtualized/styles.css"; // only needs to be imported once
-import faker from "faker";
-import {Demo, GridDemo} from "./Demo";
+import Demo from "./Demo";
 
 // Table data as an array of objects
 
 
-ReactDOM.render(<GridDemo />, document.getElementById("root"));
+// ReactDOM.render(<GridDemo />, document.getElementById("root"));
 ReactDOM.render(<Demo />, document.getElementById("example"));
