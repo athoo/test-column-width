@@ -14,59 +14,72 @@ class Demo extends React.Component {
                 ['Brian Vaughn', 'Software Engineer', 'San Jose', 'CA', 95125 /* ... */ ]
                 // And so on...
             ],
-            widths: []
+            widths: [],
+            counter: 200
         };
         this.cellRenderer = this.cellRenderer.bind(this);
+        this.reSize = this.reSize.bind(this);
+        this.columnWidthHelper = this.columnWidthHelper.bind(this);
     }
 
-    reSize(){
-
+    reSize(e){
+        const counter = this.state.counter;
+        console.log(this.state.counter);
+        this.setState({counter: counter+100})
     }
 
-    columnWidthHelper(item){
 
+
+    columnWidthHelper(params){
+        // console.log();
+        console.log("this is column width"+params.index+"\t"+this.state.counter);
+        return params.index*this.state.counter;
     }
 
     cellRenderer({columnIndex,isScrolling, isVisible, key, parent, rowIndex, style}) {
+        if(rowIndex===0){
+            return (
+                <React.Fragment key={key}>
+                    <div
+                        // key={key}
+                        style={style}
+                        className="table-header"
+                    >
+                        {this.state.list[rowIndex][columnIndex]}
+                        <span className="drag-icon">{key}</span>
+                    </div>
+                </React.Fragment>
 
-      if(rowIndex===0){
-        return (
-          <React.Fragment key={key}>
-            <div
-              // key={key}
-              style={style}
-              className="table-header"
-            >
-              {this.state.list[rowIndex][columnIndex]}
-              <span className="drag-icon">{key}</span>
-            </div>
-          </React.Fragment>
-
-        )
-      }else {
-        return (
-          <div
-            key={key}
-            style={style}
-            className="table-content"
-          >
-            {this.state.list[rowIndex][columnIndex]}
-          </div>
-        )
-      }
+            )
+        }else {
+            return (
+                <div
+                    key={key}
+                    style={style}
+                    className="table-content"
+                >
+                    {this.state.list[rowIndex][columnIndex]}
+                </div>
+            )
+        }
     }
 
     render(){
         return (
-            <Grid
-                cellRenderer={this.cellRenderer}
-                columnCount={this.state.list[0].length}
-                columnWidth={100}
-                height={300}
-                rowCount={this.state.list.length}
-                rowHeight={30}
-                width={300}
-            />
+            <React.Fragment>
+                <Grid
+                    cellRenderer={this.cellRenderer}
+                    columnCount={this.state.list[0].length}
+                    columnWidth={this.columnWidthHelper}
+                    height={300}
+                    rowCount={this.state.list.length}
+                    rowHeight={30}
+                    width={1000}
+                    estimatedColumnSize={1000}
+                />
+                <button onClick={this.reSize}>change Counter</button>
+            </React.Fragment>
+
                 )
     }
 }
