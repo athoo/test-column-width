@@ -1,6 +1,7 @@
 import React from 'react';
 import {Grid} from 'react-virtualized';
 import faker from "faker";
+import Draggable, {DraggableCore} from 'react-draggable';
 
 class Demo extends React.Component {
 
@@ -20,12 +21,19 @@ class Demo extends React.Component {
         this.cellRenderer = this.cellRenderer.bind(this);
         this.reSize = this.reSize.bind(this);
         this.columnWidthHelper = this.columnWidthHelper.bind(this);
+        // this.myRef = React.createRef();
+        this.myRef = this.myRef.bind(this);
     }
 
     reSize(e){
         const counter = this.state.counter;
         console.log(this.state.counter);
         this.setState({counter: counter+100})
+        console.log(this.myRef);
+        // debugger;
+        this._grid.recomputeGridSize();
+
+        // console.log(this._grid.measureAllCells());
     }
 
 
@@ -46,7 +54,19 @@ class Demo extends React.Component {
                         className="table-header"
                     >
                         {this.state.list[rowIndex][columnIndex]}
-                        <span className="drag-icon">{key}</span>
+                        <Draggable
+                            axis="x"
+                            defaultClassName="DragHandle"
+                            defaultClassNameDragging="DragHandleActive"
+                            onDrag={
+                                (event, {deltaX}) =>
+                                    console.log("What is the onDrag.")
+                            }
+                            // position={{}}
+                            zIndex={999}
+                        >
+                            <span className="drag-icon">{key}</span>
+                        </Draggable>
                     </div>
                 </React.Fragment>
 
@@ -68,6 +88,7 @@ class Demo extends React.Component {
         return (
             <React.Fragment>
                 <Grid
+                    ref={this.myRef}
                     cellRenderer={this.cellRenderer}
                     columnCount={this.state.list[0].length}
                     columnWidth={this.columnWidthHelper}
@@ -82,6 +103,11 @@ class Demo extends React.Component {
 
                 )
     }
+
+    myRef(ref) {
+        this._grid = ref;
+    }
+
 }
 
 export default Demo;
