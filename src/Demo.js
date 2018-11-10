@@ -3,6 +3,8 @@ import {Grid} from 'react-virtualized';
 import faker from "faker";
 import Draggable, {DraggableCore} from 'react-draggable';
 
+const TOTAL_WIDTH = 1200;
+
 class Demo extends React.Component {
 
     constructor(props){
@@ -15,7 +17,7 @@ class Demo extends React.Component {
                 ['Brian Vaughn', 'Software Engineer', 'San Jose', 'CA', 95125 /* ... */ ]
                 // And so on...
             ],
-            widths: [],
+            widths: [0.2, 0.2, 0.2, 0.2, 0.2],
             counter: 200
         };
         this.cellRenderer = this.cellRenderer.bind(this);
@@ -40,8 +42,28 @@ class Demo extends React.Component {
 
     columnWidthHelper(params){
         // console.log();
-        console.log("this is column width"+params.index+"\t"+this.state.counter);
-        return params.index*this.state.counter;
+        // console.log("this is column width"+params.index+"\t"+this.state.counter);
+        // return params.index*this.state.counter;
+        return this.state.widths[params.index]*TOTAL_WIDTH
+    }
+
+    scrollToChangeColumnWidth({key, deltaX}){
+        this.setState(prevState => {
+            let widths = prevState.widths;
+            const percentDelta = deltaX / TOTAL_WIDTH;
+
+            const index = parseInt(key.split('-')[1], 10);
+            const nextKey = index + 1;
+
+            widths[index] = widths[index] + percentDelta;
+            widths[nextKey] = widths[nextKey] - percentDelta;
+            console.log(widths);
+            return {widths}
+        })
+        console.log(this.state.widths);
+        this._grid.recomputeGridSize();
+
+        // console.log(deltaX+"\t"+key);
     }
 
     cellRenderer({columnIndex,isScrolling, isVisible, key, parent, rowIndex, style}) {
@@ -60,9 +82,13 @@ class Demo extends React.Component {
                             defaultClassNameDragging="DragHandleActive"
                             onDrag={
                                 (event, {deltaX}) =>
-                                    console.log("What is the onDrag.")
+                                    this.scrollToChangeColumnWidth({
+                                        key,
+                                        deltaX
+                                    })
+                                    // console.log("What is the onDrag.")
                             }
-                            // position={{}}
+                            position={{x:0}}
                             zIndex={999}
                         >
                             <span className="drag-icon">{key}</span>
